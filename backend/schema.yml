@@ -1,0 +1,1015 @@
+openapi: 3.0.3
+info:
+  title: JobTrack Pro API
+  version: 1.0.0
+  description: Smart Job Search & Application Management System — REST API endpoints
+    for authentication, applications tracking, interview scheduling, and metrics.
+paths:
+  /api/applications/:
+    get:
+      operationId: applications_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedJobApplicationList'
+          description: ''
+    post:
+      operationId: applications_create
+      tags:
+      - applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+          description: ''
+  /api/applications/{id}/:
+    get:
+      operationId: applications_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+          description: ''
+    put:
+      operationId: applications_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+          description: ''
+    patch:
+      operationId: applications_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedJobApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedJobApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedJobApplication'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+          description: ''
+    delete:
+      operationId: applications_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/applications/{id}/status/:
+    patch:
+      operationId: applications_status_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedJobApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedJobApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedJobApplication'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+          description: ''
+  /api/applications/all-items/:
+    get:
+      operationId: applications_all_items_retrieve
+      description: Returns all applications unpaginated for Kanban board with optional
+        search/filters.
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+          description: ''
+  /api/applications/stats/:
+    get:
+      operationId: applications_stats_retrieve
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+          description: ''
+  /api/auth/change-password/:
+    post:
+      operationId: auth_change_password_create
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTokenObtainPair'
+          description: ''
+  /api/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: auth_profile_update
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'
+          description: ''
+  /api/health/:
+    get:
+      operationId: health_retrieve
+      tags:
+      - health
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/interviews/:
+    get:
+      operationId: interviews_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - interviews
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInterviewList'
+          description: ''
+    post:
+      operationId: interviews_create
+      tags:
+      - interviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Interview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Interview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Interview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+          description: ''
+  /api/interviews/{id}/:
+    get:
+      operationId: interviews_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - interviews
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+          description: ''
+    put:
+      operationId: interviews_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - interviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Interview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Interview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Interview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+          description: ''
+    patch:
+      operationId: interviews_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - interviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInterview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInterview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInterview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+          description: ''
+    delete:
+      operationId: interviews_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - interviews
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/interviews/{id}/toggle-complete/:
+    post:
+      operationId: interviews_toggle_complete_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - interviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Interview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Interview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Interview'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+          description: ''
+    patch:
+      operationId: interviews_toggle_complete_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - interviews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInterview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInterview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInterview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+          description: ''
+  /api/interviews/upcoming/:
+    get:
+      operationId: interviews_upcoming_retrieve
+      tags:
+      - interviews
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+          description: ''
+components:
+  schemas:
+    ApplicationBrief:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        job_title:
+          type: string
+          maxLength: 255
+        company_name:
+          type: string
+          maxLength: 255
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        job_location:
+          type: string
+          maxLength: 255
+        work_mode:
+          $ref: '#/components/schemas/WorkModeEnum'
+      required:
+      - company_name
+      - id
+      - job_title
+    CustomTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    EmploymentTypeEnum:
+      enum:
+      - Full-time
+      - Part-time
+      - Internship
+      - Contract
+      type: string
+      description: |-
+        * `Full-time` - Full-time
+        * `Part-time` - Part-time
+        * `Internship` - Internship
+        * `Contract` - Contract
+    Interview:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        application:
+          type: integer
+        application_details:
+          allOf:
+          - $ref: '#/components/schemas/ApplicationBrief'
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        interview_type:
+          $ref: '#/components/schemas/InterviewTypeEnum'
+        interview_date:
+          type: string
+          format: date-time
+        location_or_link:
+          type: string
+          maxLength: 500
+        interviewer_names:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+        is_completed:
+          type: boolean
+        outcome:
+          $ref: '#/components/schemas/OutcomeEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - application
+      - application_details
+      - created_at
+      - id
+      - interview_date
+      - updated_at
+    InterviewTypeEnum:
+      enum:
+      - Screening
+      - Technical
+      - System Design
+      - Behavioral
+      - Hiring Manager
+      - Take-Home
+      - Final
+      - Other
+      type: string
+      description: |-
+        * `Screening` - HR Screening
+        * `Technical` - Technical Interview
+        * `System Design` - System Design
+        * `Behavioral` - Behavioral / Culture
+        * `Hiring Manager` - Hiring Manager
+        * `Take-Home` - Take-Home Review
+        * `Final` - Final Round
+        * `Other` - Other
+    JobApplication:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        job_title:
+          type: string
+          maxLength: 255
+        company_name:
+          type: string
+          maxLength: 255
+        company_website:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        job_description:
+          type: string
+        job_location:
+          type: string
+          maxLength: 255
+        work_mode:
+          $ref: '#/components/schemas/WorkModeEnum'
+        employment_type:
+          $ref: '#/components/schemas/EmploymentTypeEnum'
+        job_url:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        salary_range:
+          type: string
+          maxLength: 150
+        application_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        interview_date:
+          type: string
+          format: date-time
+          nullable: true
+        recruiter_name:
+          type: string
+          maxLength: 255
+        recruiter_email:
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        notes:
+          type: string
+        interviews_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - company_name
+      - created_at
+      - id
+      - interviews_count
+      - job_title
+      - updated_at
+    OutcomeEnum:
+      enum:
+      - Pending
+      - Passed
+      - Did Not Advance
+      type: string
+      description: |-
+        * `Pending` - Pending
+        * `Passed` - Passed
+        * `Did Not Advance` - Did Not Advance
+    PaginatedInterviewList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Interview'
+    PaginatedJobApplicationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobApplication'
+    PatchedInterview:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        application:
+          type: integer
+        application_details:
+          allOf:
+          - $ref: '#/components/schemas/ApplicationBrief'
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        interview_type:
+          $ref: '#/components/schemas/InterviewTypeEnum'
+        interview_date:
+          type: string
+          format: date-time
+        location_or_link:
+          type: string
+          maxLength: 500
+        interviewer_names:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+        is_completed:
+          type: boolean
+        outcome:
+          $ref: '#/components/schemas/OutcomeEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedJobApplication:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        job_title:
+          type: string
+          maxLength: 255
+        company_name:
+          type: string
+          maxLength: 255
+        company_website:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        job_description:
+          type: string
+        job_location:
+          type: string
+          maxLength: 255
+        work_mode:
+          $ref: '#/components/schemas/WorkModeEnum'
+        employment_type:
+          $ref: '#/components/schemas/EmploymentTypeEnum'
+        job_url:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        salary_range:
+          type: string
+          maxLength: 150
+        application_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        interview_date:
+          type: string
+          format: date-time
+          nullable: true
+        recruiter_name:
+          type: string
+          maxLength: 255
+        recruiter_email:
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        notes:
+          type: string
+        interviews_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    Register:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+          minLength: 6
+        password_confirm:
+          type: string
+          writeOnly: true
+          minLength: 6
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - email
+      - password
+      - password_confirm
+      - username
+    StatusEnum:
+      enum:
+      - Wishlist
+      - Applied
+      - Assessment
+      - Interview
+      - Offer
+      - Rejected
+      type: string
+      description: |-
+        * `Wishlist` - Wishlist
+        * `Applied` - Applied
+        * `Assessment` - Assessment
+        * `Interview` - Interview
+        * `Offer` - Offer
+        * `Rejected` - Rejected
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    WorkModeEnum:
+      enum:
+      - Remote
+      - Hybrid
+      - On-site
+      type: string
+      description: |-
+        * `Remote` - Remote
+        * `Hybrid` - Hybrid
+        * `On-site` - On-site
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
