@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useOutletContext } from 'react-router-dom';
 import {
   Briefcase,
   Search,
@@ -16,9 +16,12 @@ import {
   MapPin,
   Calendar,
   Layers,
+  Download,
+  Mail,
 } from 'lucide-react';
 import { applicationsApi } from '../api/client';
 import { formatDate } from '../utils/formatters';
+import { exportApplicationsToCSV } from '../utils/csvExport';
 import StatusBadge from '../components/common/StatusBadge';
 import WorkModeBadge from '../components/common/WorkModeBadge';
 import ConfirmDialog from '../components/common/ConfirmDialog';
@@ -37,6 +40,7 @@ const SORT_OPTIONS = [
 
 const ApplicationsPage = () => {
   const toast = useToast();
+  const { onOpenFollowUp } = useOutletContext() || {};
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [applications, setApplications] = useState([]);
@@ -127,13 +131,23 @@ const ApplicationsPage = () => {
             Search, filter, and track every application in your pipeline ({totalCount} total)
           </p>
         </div>
-        <Link
-          to="/applications/new"
-          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-600/20 transition-all self-start sm:self-auto active:scale-[0.98]"
-        >
-          <Plus className="w-4 h-4" />
-          Add Application
-        </Link>
+        <div className="flex items-center gap-2.5 flex-wrap self-start sm:self-auto">
+          <button
+            onClick={() => exportApplicationsToCSV(applications)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all shadow-sm"
+            title="Export currently loaded applications to CSV"
+          >
+            <Download className="w-4 h-4 text-slate-500" />
+            <span>Export CSV</span>
+          </button>
+          <Link
+            to="/applications/new"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-600/20 transition-all active:scale-[0.98]"
+          >
+            <Plus className="w-4 h-4" />
+            Add Application
+          </Link>
+        </div>
       </div>
 
       {/* Search and Filters Bar */}
@@ -326,6 +340,14 @@ const ApplicationsPage = () => {
 
                     <td className="py-4 px-4 text-right">
                       <div className="flex items-center justify-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => onOpenFollowUp && onOpenFollowUp(app)}
+                          title="Draft follow-up email"
+                          className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                        >
+                          <Mail className="w-4 h-4" />
+                        </button>
                         <Link
                           to={`/applications/${app.id}`}
                           title="View Details"
