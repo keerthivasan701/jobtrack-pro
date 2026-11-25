@@ -5,6 +5,7 @@
   "scripts": {
     "build": "cd frontend && npm install && npm run build",
     "start": "cd frontend && npm run preview",
-    "test": "cd frontend && npm test"
+    "test": "cd frontend && npm test",
+    "lint": "cd frontend && npm run lint"
   }
 }

@@ -66,7 +66,7 @@ const EditApplicationPage = () => {
           recruiter_email: data.recruiter_email || '',
           notes: data.notes || '',
         });
-      } catch (err) {
+      } catch {
         toast.error('Failed to load application.');
         navigate('/applications');
       } finally {

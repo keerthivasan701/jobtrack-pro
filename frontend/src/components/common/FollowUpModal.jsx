@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
-import { Mail, Copy, Check, ExternalLink, Sparkles, Send } from 'lucide-react';
+import { Copy, Check, Send } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 
 const TEMPLATES = [

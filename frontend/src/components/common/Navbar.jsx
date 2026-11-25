@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Plus, User, LogOut, Settings, Bell, ExternalLink, Search } from 'lucide-react';
+import { Menu, Plus, LogOut, Settings, ExternalLink, Search } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const Navbar = ({ onOpenMobileMenu, onOpenQuickAdd, onOpenCommandPalette }) => {

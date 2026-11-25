@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
-  Briefcase,
   ArrowLeft,
-  Building,
-  MapPin,
-  DollarSign,
   Calendar,
-  Globe,
   Mail,
   User,
   FileText,
@@ -18,7 +13,6 @@ import {
   Clock,
   Video,
   CheckCircle2,
-  Check,
 } from 'lucide-react';
 import { applicationsApi, interviewsApi } from '../api/client';
 import { formatDate, getRelativeDays } from '../utils/formatters';

@@ -9,7 +9,6 @@ import {
   PlusCircle,
   LogOut,
   ChevronRight,
-  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
